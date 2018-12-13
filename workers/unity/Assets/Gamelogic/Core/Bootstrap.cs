@@ -1,9 +1,4 @@
-using Improbable;
 using Improbable.Core;
-using Improbable.Unity;
-using Improbable.Unity.Configuration;
-using Improbable.Unity.Core;
-using Improbable.Unity.Core.EntityQueries;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

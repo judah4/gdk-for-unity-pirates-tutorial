@@ -6,40 +6,84 @@
       "snapshotWritePeriodSeconds": 0
     },
     "dimensions": {
-      "xMeters": 8000,
-      "zMeters": 8000
-    }
+      "xMeters": 500,
+      "zMeters": 500
+    },
+    "legacy_flags": [
+      {
+        "name": "bridge_qos_max_timeout",
+        "value": "0"
+      }
+    ]
   },
   "workers": [
     {
-      "worker_type": "UnityWorker",
+      "worker_type": "UnityGameLogic",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
       "permissions": [
         {
           "all": {}
         }
       ],
       "load_balancing": {
-        "auto_hex_grid": {
-          "num_workers": 1
-         }
+        "singleton_worker": {}
       }
     },
     {
       "worker_type": "UnityClient",
-      "permissions": [{
-          "entity_creation": {
-          "allow": false
-        },
-        "entity_deletion": {
-          "allow": false
-        },
-        "entity_query": {
-          "allow": true,
-          "components": [
-              "*"
-          ]
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
         }
-      }]
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
+      "load_balancing": {
+        "singleton_worker": {}
+      }
+    },
+    {
+      "worker_type": "SimulatedPlayer",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
+      "load_balancing": {
+        "singleton_worker": {}
+      }
+    },
+    {
+      "worker_type": "SimulatedPlayerCoordinator",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
+      "load_balancing": {
+        "singleton_worker": {}
+      }
     }
   ]
 }
