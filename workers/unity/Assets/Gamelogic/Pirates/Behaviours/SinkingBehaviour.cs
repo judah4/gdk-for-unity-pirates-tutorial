@@ -1,11 +1,8 @@
-﻿using Improbable.Unity;
-using Improbable.Unity.Visualizer;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
 {
     // Add this MonoBehaviour on client workers only
-    [WorkerType(WorkerPlatform.UnityClient)]
     public class SinkingBehaviour : MonoBehaviour
     {
         [SerializeField]

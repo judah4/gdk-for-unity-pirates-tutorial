@@ -1,8 +1,8 @@
 using Improbable;
 using Improbable.Core;
-using Improbable.Unity.Visualizer;
+using Improbable.Gdk.GameObjectRepresentation;
 using UnityEngine;
-using Improbable.Worker;
+using Improbable.Worker.CInterop;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
 {
@@ -10,25 +10,22 @@ namespace Assets.Gamelogic.Pirates.Behaviours
     public class TransformReceiver : MonoBehaviour
     {
         // Inject access to the entity's Position and Rotation components
-        [Require] private Position.Reader PositionReader;
-        [Require] private Rotation.Reader RotationReader;
+        [Require] private Position.Requirable.Reader PositionReader;
+        [Require] private Rotation.Requirable.Reader RotationReader;
 
         void OnEnable()
         {
             // Initialize entity's gameobject transform from Position and Rotation component values
-            transform.position = PositionReader.Data.coords.ToUnityVector();
-            transform.rotation = Quaternion.Euler(0.0f, RotationReader.Data.rotation, 0.0f);
+            transform.position = PositionReader.Data.Coords.ToUnityVector();
+            transform.rotation = Quaternion.Euler(0.0f, RotationReader.Data.Rotation, 0.0f);
 
             // Register callback for when component changes
-            PositionReader.ComponentUpdated.Add(OnPositionUpdated);
-            RotationReader.ComponentUpdated.Add(OnRotationUpdated);
+            PositionReader.ComponentUpdated+=(OnPositionUpdated);
+            RotationReader.ComponentUpdated += (OnRotationUpdated);
         }
 
         void OnDisable()
         {
-            // Deregister callback for when component changes
-            PositionReader.ComponentUpdated.Remove(OnPositionUpdated);
-            RotationReader.ComponentUpdated.Remove(OnRotationUpdated);
         }
 
         // Callback for whenever one or more property of the Position standard library component is updated
@@ -42,9 +39,9 @@ namespace Assets.Gamelogic.Pirates.Behaviours
              */
 			if (PositionReader.Authority == Authority.NotAuthoritative)
             {
-                if (update.coords.HasValue)
+                if (update.Coords.HasValue)
                 {
-                    transform.position = update.coords.Value.ToUnityVector();
+                    transform.position = update.Coords.Value.ToUnityVector();
                 }
             }
         }
@@ -60,9 +57,9 @@ namespace Assets.Gamelogic.Pirates.Behaviours
              */
 			if (RotationReader.Authority == Authority.NotAuthoritative)
             {
-                if (update.rotation.HasValue)
+                if (update.Rotation.HasValue)
                 {
-                    transform.rotation = Quaternion.Euler(0.0f, update.rotation.Value, 0.0f);
+                    transform.rotation = Quaternion.Euler(0.0f, update.Rotation.Value, 0.0f);
                 }
             }
         }

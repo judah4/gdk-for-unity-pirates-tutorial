@@ -1,13 +1,10 @@
 ﻿using Improbable.Core;
-using Improbable.Unity;
-using Improbable.Unity.Visualizer;
+using Improbable.Gdk.GameObjectRepresentation;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
 {
-    // Add this MonoBehaviour on client workers only
-    [WorkerType(WorkerPlatform.UnityClient)]
     public class ScoreGUI : MonoBehaviour
     {
         /* 
@@ -16,7 +13,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
          * the GameObject of other players' ships.
          */
         [Require]
-        private ClientAuthorityCheck.Writer ClientAuthorityCheckWriter;
+        private ClientAuthorityCheck.Requirable.Writer ClientAuthorityCheckWriter;
 
         private GameObject scoreCanvasUI;
         private Text totalPointsGUI;

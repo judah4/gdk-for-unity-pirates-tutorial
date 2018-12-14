@@ -1,8 +1,8 @@
 using System;
 using Improbable;
 using Improbable.Core;
+using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Ship;
-using Improbable.Unity.Visualizer;
 using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
@@ -14,9 +14,9 @@ namespace Assets.Gamelogic.Pirates.Behaviours
          * An entity with this MonoBehaviour will have it enabled only for the single worker (whether client or server)
          * which has write-access for its Position and Rotation components.
          */
-        [Require] private Position.Writer PositionWriter;
-        [Require] private Rotation.Writer RotationWriter;
-        [Require] protected ShipControls.Reader ShipControlsReader;
+        [Require] private Position.Requirable.Writer PositionWriter;
+        [Require] private Rotation.Requirable.Writer RotationWriter;
+        [Require] protected ShipControls.Requirable.Reader ShipControlsReader;
 
         private float targetSpeed; // [0..1]
         private float currentSpeed; // [0..1]
@@ -31,16 +31,16 @@ namespace Assets.Gamelogic.Pirates.Behaviours
         private void OnEnable()
         {
             // Initialize entity's gameobject transform from Position and Rotation component values
-            transform.position = PositionWriter.Data.coords.ToUnityVector();
-            transform.rotation = Quaternion.Euler(0.0f, RotationWriter.Data.rotation, 0.0f);
+            transform.position = PositionWriter.Data.Coords.ToUnityVector();
+            transform.rotation = Quaternion.Euler(0.0f, RotationWriter.Data.Rotation, 0.0f);
             myRigidbody.inertiaTensorRotation = Quaternion.identity;
         }
 
         // Calculate speed and steer values ready from input for next physics actions in FixedUpdate
         private void Update()
         {
-            var inputSpeed = ShipControlsReader.Data.targetSpeed;
-            var inputSteering = ShipControlsReader.Data.targetSteering;
+            var inputSpeed = ShipControlsReader.Data.TargetSpeed;
+            var inputSteering = ShipControlsReader.Data.TargetSteering;
 
             var delta = Time.deltaTime;
 
@@ -95,8 +95,8 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         private void SendPositionAndRotationUpdates()
         {
-            PositionWriter.Send(new Position.Update().SetCoords(transform.position.ToCoordinates()));
-            RotationWriter.Send(new Rotation.Update().SetRotation((uint)transform.rotation.eulerAngles.y));
+            PositionWriter.Send(new Position.Update() {Coords = (transform.position.ToCoordinates()) });
+            RotationWriter.Send(new Rotation.Update() { Rotation = ((uint)transform.rotation.eulerAngles.y)});
         }
     }
 

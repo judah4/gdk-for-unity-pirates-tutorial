@@ -2,92 +2,106 @@
 using Improbable.Core;
 using Improbable.Player;
 using Improbable.Ship;
-using Improbable.Unity.Core.Acls;
-using Improbable.Worker;
-using Improbable;
-using Improbable.Unity.Entity;
 using Random = UnityEngine.Random; // Used in lesson 2
-using System; // Used in lesson 2
+using System;
+using Improbable;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.TransformSynchronization;
+using Improbable.PlayerLifecycle;
+using Playground;
+// Used in lesson 2
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.WSA;
 
 namespace Assets.Gamelogic.EntityTemplates
 {
     // Factory class with static methods used to define templates for every created entity.
     public static class EntityTemplateFactory
     {
+
         // Defines the template for the PlayerShip entity.
-        public static Entity CreatePlayerShipTemplate(string clientWorkerId, Vector3 initialPosition)
+        public static EntityTemplate CreatePlayerShipTemplate(string workerId, Improbable.Vector3f position)
         {
+            var clientAttribute = $"workerId:{workerId}";
+
+
+            //set position to random for now
+            position = new Vector3f(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+
+
             var playerEntityTemplate = EntityBuilder.Begin()
               // Add components to the entity, then set the access permissions for the component on the entity relative to the client or server worker ids.
-              .AddPositionComponent(initialPosition, CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-              .AddMetadataComponent(SimulationSettings.PlayerShipPrefabName)
+              .AddPosition(position.X, position.Y, position.Z, clientAttribute)
+              .AddMetadata(SimulationSettings.PlayerShipPrefabName, WorkerUtils.UnityGameLogic)
               .SetPersistence(false)
-              .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-              .AddComponent(new Rotation.Data(0), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-              .AddComponent(new ClientConnection.Data(SimulationSettings.TotalHeartbeatsBeforeTimeout), CommonRequirementSets.PhysicsOnly)
-              .AddComponent(new ShipControls.Data(0, 0), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-              .AddComponent(new ClientAuthorityCheck.Data(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-              .Build();
+              .SetReadAcl(WorkerUtils.AllWorkerAttributes)
+              .AddComponent(Rotation.Component.CreateSchemaComponentData(0), clientAttribute)
+              .AddComponent(ShipControls.Component.CreateSchemaComponentData(0, 0), clientAttribute)
+              .AddComponent(ClientAuthorityCheck.Component.CreateSchemaComponentData(), clientAttribute)
+              .AddPlayerLifecycleComponents(workerId, clientAttribute, WorkerUtils.UnityGameLogic)
 
-            return playerEntityTemplate;
+            ;
+
+            return playerEntityTemplate.Build();
         }
 
         // Defines the template for the PlayerCreator entity.
-        public static Entity CreatePlayerCreatorTemplate()
+        public static EntityTemplate CreatePlayerCreatorTemplate()
         {
             var playerCreatorEntityTemplate = EntityBuilder.Begin()
               // Add components to the entity, then set the access permissions for the component on the entity relative to the client or server worker ids.
-              .AddPositionComponent(new Vector3(-5, 0, 0), CommonRequirementSets.PhysicsOnly)
-              .AddMetadataComponent(SimulationSettings.PlayerCreatorPrefabName)
+              .AddPosition(-5, 0, 0, WorkerUtils.UnityGameLogic)
+              .AddMetadata(SimulationSettings.PlayerCreatorPrefabName, WorkerUtils.UnityGameLogic)
               .SetPersistence(true)
-              .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-              .AddComponent(new PlayerCreation.Data(), CommonRequirementSets.PhysicsOnly)
+              .SetReadAcl(WorkerUtils.AllWorkerAttributes)
+              .AddComponent(PlayerCreator.Component.CreateSchemaComponentData(), WorkerUtils.UnityGameLogic)
               .Build();
 
             return playerCreatorEntityTemplate;
         }
 
         // Template definition for a Island snapshot entity
-        static public Entity GenerateIslandEntityTemplate(Vector3 initialPosition, string prefabName)
+        static public EntityTemplate GenerateIslandEntityTemplate(Vector3 initialPosition, string prefabName)
         {
             var islandEntityTemplate = EntityBuilder.Begin()
               // Add components to the entity, then set the access permissions for the component on the entity relative to the client or server worker ids.
-              .AddPositionComponent(initialPosition, CommonRequirementSets.PhysicsOnly)
-              .AddMetadataComponent(prefabName)
+              .AddPosition(initialPosition.x, initialPosition.y, initialPosition.z, WorkerUtils.UnityGameLogic)
+              .AddMetadata(prefabName, WorkerUtils.UnityGameLogic)
               .SetPersistence(true)
-              .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-              .AddComponent(new Rotation.Data(0), CommonRequirementSets.PhysicsOnly)
+              .SetReadAcl(WorkerUtils.AllWorkerAttributes)
+              .AddComponent(Rotation.Component.CreateSchemaComponentData(0), WorkerUtils.UnityGameLogic)
               .Build();
 
             return islandEntityTemplate;
         }
 
         // Template definition for a SmallFish snapshot entity
-        static public Entity GenerateSmallFishTemplate(Vector3 initialPosition)
+        static public EntityTemplate GenerateSmallFishTemplate(Vector3 initialPosition)
         {
             var smallFishTemplate = EntityBuilder.Begin()
               // Add components to the entity, then set the access permissions for the component on the entity relative to the client or server worker ids.
-              .AddPositionComponent(initialPosition, CommonRequirementSets.PhysicsOnly)
-              .AddMetadataComponent(SimulationSettings.SmallFishPrefabName)
+              .AddPosition(initialPosition.x, initialPosition.y, initialPosition.z, WorkerUtils.UnityGameLogic)
+              .AddMetadata(SimulationSettings.SmallFishPrefabName, WorkerUtils.UnityGameLogic)
               .SetPersistence(true)
-              .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-              .AddComponent(new Rotation.Data(0), CommonRequirementSets.PhysicsOnly)
+              .SetReadAcl(WorkerUtils.AllWorkerAttributes)
+              .AddComponent(Rotation.Component.CreateSchemaComponentData(0), WorkerUtils.UnityGameLogic)
               .Build();
 
             return smallFishTemplate;
         }
 
         // Template definition for a LargeFish snapshot entity
-        static public Entity GenerateLargeFishTemplate(Vector3 initialPosition)
+        static public EntityTemplate GenerateLargeFishTemplate(Vector3 initialPosition)
         {
             var largeFishTemplate = EntityBuilder.Begin()
               // Add components to the entity, then set the access permissions for the component on the entity relative to the client or server worker ids.
-              .AddPositionComponent(initialPosition, CommonRequirementSets.PhysicsOnly)
-              .AddMetadataComponent(SimulationSettings.LargeFishPrefabName)
+              .AddPosition(initialPosition.x, initialPosition.y, initialPosition.z, WorkerUtils.UnityGameLogic)
+              .AddMetadata(SimulationSettings.LargeFishPrefabName, WorkerUtils.UnityGameLogic)
               .SetPersistence(true)
-              .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-              .AddComponent(new Rotation.Data(0), CommonRequirementSets.PhysicsOnly)
+              .SetReadAcl(WorkerUtils.AllWorkerAttributes)
+              .AddComponent(Rotation.Component.CreateSchemaComponentData(0), WorkerUtils.UnityGameLogic)
               .Build();
             
             return largeFishTemplate;

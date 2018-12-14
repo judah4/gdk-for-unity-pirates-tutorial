@@ -1,9 +1,9 @@
 ﻿using Assets.Gamelogic.Core;
 using Assets.Gamelogic.EntityTemplates;
-using Improbable;
-using Improbable.Worker;
 using System.Collections.Generic;
 using System.IO;
+using Improbable.Gdk.Core;
+using Improbable.Worker.CInterop;
 using UnityEditor;
 using Random = UnityEngine.Random;
 using UnityEngine;
@@ -15,7 +15,7 @@ namespace Assets.Editor
         [MenuItem("Improbable/Snapshots/Generate Default Snapshot")]
         private static void GenerateDefaultSnapshot()
         {
-            var snapshotEntities = new Dictionary<EntityId, Entity>();
+            var snapshotEntities = new Dictionary<EntityId, EntityTemplate>();
             var currentEntityId = 1;
 
             snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreatePlayerCreatorTemplate());
@@ -27,7 +27,7 @@ namespace Assets.Editor
         }
 
         // Create and island entity for each island prefab at its given world coordinates
-        public static void PopulateSnapshotWithIslandTerrainEntities(ref Dictionary<EntityId, Entity> snapshotEntities, ref int nextAvailableId)
+        public static void PopulateSnapshotWithIslandTerrainEntities(ref Dictionary<EntityId, EntityTemplate> snapshotEntities, ref int nextAvailableId)
         {
             foreach(var item in SimulationSettings.IslandsEntityPlacements)
             {
@@ -37,7 +37,7 @@ namespace Assets.Editor
         }
 
         // Create shoal of small fish entities around given coordinates
-        public static void PopulateSnapshotWithSmallFishGroups(ref Dictionary<EntityId, Entity> snapshotEntities, ref int nextAvailableId)
+        public static void PopulateSnapshotWithSmallFishGroups(ref Dictionary<EntityId, EntityTemplate> snapshotEntities, ref int nextAvailableId)
         {
             foreach (var location in SimulationSettings.FishShoalStartingLocations)
             {
@@ -52,7 +52,7 @@ namespace Assets.Editor
         }
 
         // Create large fish entities
-        public static void PopulateSnapshotWithLargeFish(ref Dictionary<EntityId, Entity> snapshotEntities, ref int nextAvailableId)
+        public static void PopulateSnapshotWithLargeFish(ref Dictionary<EntityId, EntityTemplate> snapshotEntities, ref int nextAvailableId)
         {
             foreach (var location in SimulationSettings.LargeFishStartingLocations)
             {
@@ -60,22 +60,16 @@ namespace Assets.Editor
             }
         }
 
-        private static void SaveSnapshot(IDictionary<EntityId, Entity> snapshotEntities)
+        private static void SaveSnapshot(IDictionary<EntityId, EntityTemplate> snapshotEntities)
         {
             var snapshotPath = Application.dataPath + SimulationSettings.DefaultRelativeSnapshotPath;
             File.Delete(snapshotPath);
-            using (SnapshotOutputStream stream = new SnapshotOutputStream(snapshotPath))
+            var snapshot = new Snapshot();            
+            foreach (var kvp in snapshotEntities)
             {
-                foreach (var kvp in snapshotEntities)
-                {
-                    var error = stream.WriteEntity(kvp.Key, kvp.Value);
-                    if (error.HasValue)
-                        {
-                            Debug.LogErrorFormat("Failed to generate initial world snapshot: {0}", error.Value);
-                            return;
-                        }
-                }
+                snapshot.AddEntity(kvp.Value);
             }
+            snapshot.WriteToFile(snapshotPath);
                 Debug.LogFormat("Successfully generated initial world snapshot at {0}", snapshotPath);
         }
     }

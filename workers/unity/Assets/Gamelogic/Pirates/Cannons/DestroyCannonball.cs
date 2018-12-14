@@ -1,5 +1,5 @@
 ﻿using Improbable;
-using Improbable.Collections;
+using Improbable.Gdk.Core;
 using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Cannons

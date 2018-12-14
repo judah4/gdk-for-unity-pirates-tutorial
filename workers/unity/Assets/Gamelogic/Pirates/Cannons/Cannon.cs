@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Improbable.Gdk.GameObjectRepresentation;
+using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Cannons
 {
@@ -22,10 +23,18 @@ namespace Assets.Gamelogic.Pirates.Cannons
         [SerializeField]
         private AudioSource cannonFireAudioSource;
 
+        [SerializeField]
+        private SpatialOSComponent _spatialOsComponent;
+
         void Start()
         {
             maxRange = CalculateMaxRange();
             firerColliders = gameObject.GetComponentsInChildren<Collider>();
+        }
+
+        void OnEnable()
+        {
+            _spatialOsComponent = GetComponent<SpatialOSComponent>();
         }
 
         public void Fire(Vector3 dir)
@@ -35,7 +44,7 @@ namespace Assets.Gamelogic.Pirates.Cannons
             if (CannonballPrefab != null)
             {
                 var cannonball = Instantiate(CannonballPrefab, transform.position+dir*0.6f, transform.rotation) as GameObject;
-                var entityId = gameObject.EntityId();
+                var entityId = _spatialOsComponent.SpatialEntityId;
                 cannonball.GetComponent<DestroyCannonball>().firerEntityId = entityId;
                 EnsureCannonBallWillNotCollideWithFirer(cannonball);
                 FireCannonball(cannonball, dir, firingPitch);

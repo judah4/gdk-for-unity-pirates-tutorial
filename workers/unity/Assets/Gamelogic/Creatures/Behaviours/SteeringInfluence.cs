@@ -1,12 +1,9 @@
 ﻿using Assets.Gamelogic.Core;
-using Improbable.Unity.Visualizer;
-using Improbable.Unity;
 using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Behaviours.Creatures
 {
     // Enable this MonoBehaviour on UnityWorker (server-side) workers only
-    [WorkerType(WorkerPlatform.UnityWorker)]
     public abstract class SteeringInfluence : MonoBehaviour
     {
         protected static SteeringAggregator SteeringInfluenceAggregator;

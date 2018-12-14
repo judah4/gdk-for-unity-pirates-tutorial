@@ -1,12 +1,10 @@
 using Improbable.Core;
-using Improbable.Unity;
-using Improbable.Unity.Visualizer;
+using Improbable.Gdk.GameObjectRepresentation;
 using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
 {
     // Add this MonoBehaviour on client workers only
-    [WorkerType(WorkerPlatform.UnityClient)]
     public class CameraEnablerVisualizer : MonoBehaviour
     {
         /* 
@@ -15,7 +13,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
          * the GameObject of other players' ships.
          */
         [Require]
-        private ClientAuthorityCheck.Writer ClientAuthorityCheckWriter;
+        private ClientAuthorityCheck.Requirable.Writer ClientAuthorityCheckWriter;
 
         private Transform Camera;
         [SerializeField]

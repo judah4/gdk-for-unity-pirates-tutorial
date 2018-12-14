@@ -1,11 +1,8 @@
-﻿using Improbable.Unity;
-using Improbable.Unity.Visualizer;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Gamelogic.Shaders
 {
     // Enable this MonoBehaviour on client workers only
-    [WorkerType(WorkerPlatform.UnityClient)]
     public class ReapplyShaders : MonoBehaviour
     {
         // This script fixes a Unity bug that prevents shaders from correctly being visualised on Macs.

@@ -1,15 +1,13 @@
 using Assets.Gamelogic.Core;
 using Assets.Gamelogic.Pirates.Cannons;
+using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Ship;
-using Improbable.Unity;
-using Improbable.Unity.Visualizer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
 {
     // Add this MonoBehaviour on client workers only
-    [WorkerType(WorkerPlatform.UnityClient)]
     public class PlayerInputController : MonoBehaviour
     {
         /* 
@@ -18,7 +16,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
          * the GameObject of other players' ships.
          */
         [Require]
-        private ShipControls.Writer ShipControlsWriter;
+        private ShipControls.Requirable.Writer ShipControlsWriter;
 
         private CannonFirer cannonFirer;
 
@@ -29,9 +27,10 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         void Update()
         {
-            ShipControlsWriter.Send(new ShipControls.Update()
-                .SetTargetSpeed(Mathf.Clamp01(Input.GetAxis("Vertical")))
-                .SetTargetSteering(Input.GetAxis("Horizontal")));
+            ShipControlsWriter.Send(new ShipControls.Update() { 
+                TargetSpeed = (Mathf.Clamp01(Input.GetAxis("Vertical"))),
+                TargetSteering = (Input.GetAxis("Horizontal"))
+                });
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
