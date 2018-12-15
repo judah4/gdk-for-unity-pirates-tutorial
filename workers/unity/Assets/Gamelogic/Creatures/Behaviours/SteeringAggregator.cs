@@ -19,14 +19,17 @@ namespace Assets.Gamelogic.Pirates.Behaviours.Creatures
         [Require]
         private Rotation.Requirable.Writer RotationWriter;
 
+        [SerializeField] private SpatialOSComponent _spatialOsComponent;
+
         private Vector3 desiredHeading;
         private List<SteeringInfluence> steeringInfluences = new List<SteeringInfluence>();
 
         protected void OnEnable()
         {
+            _spatialOsComponent = GetComponent<SpatialOSComponent>();
             desiredHeading = transform.forward;
             // Initialize entity's gameobject transform from Position component values
-            transform.position = PositionWriter.Data.Coords.ToUnityVector();
+            transform.position = PositionWriter.Data.Coords.ToUnityVector() + _spatialOsComponent.Worker.Origin;
             transform.rotation = Quaternion.Euler(0.0f, RotationWriter.Data.Rotation, 0.0f);
         }
 
@@ -53,7 +56,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours.Creatures
             transform.Translate(transform.forward * SimulationSettings.SteeringMovementSpeed * Time.deltaTime, Space.World);
 
             // Synchronise transform across all workers
-            PositionWriter.Send(new Position.Update() { Coords = (transform.position.ToCoordinates())});
+            PositionWriter.Send(new Position.Update() { Coords = (transform.position - _spatialOsComponent.Worker.Origin).ToCoordinates()});
             RotationWriter.Send(new Rotation.Update() { Rotation = ((uint)transform.rotation.eulerAngles.y)});
         }
 

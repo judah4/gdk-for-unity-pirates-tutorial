@@ -30,11 +30,16 @@ namespace Assets.Gamelogic.Pirates.Cannons
         {
             maxRange = CalculateMaxRange();
             firerColliders = gameObject.GetComponentsInChildren<Collider>();
+            _spatialOsComponent = GetComponent<SpatialOSComponent>();
+
         }
 
         void OnEnable()
         {
-            _spatialOsComponent = GetComponent<SpatialOSComponent>();
+            if (_spatialOsComponent == null)
+            {
+                _spatialOsComponent = GetComponent<SpatialOSComponent>();
+            }
         }
 
         public void Fire(Vector3 dir)

@@ -14,7 +14,8 @@ MonoBehaviour:
   WorkerBuildConfigurations:
   - WorkerType: UnityClient
     ScenesForWorker:
-    - {fileID: 102900000, guid: 3f6e3d421576ca644b07380deacd35bb, type: 3}
+    - {fileID: 102900000, guid: 130fda4238e082e4099014d68ba04ba5, type: 3}
+    - {fileID: 102900000, guid: e149a29d6c8e76449b120513654cc452, type: 3}
     LocalBuildConfig:
       BuildPlatforms: 1
       BuildOptions: 1
@@ -23,29 +24,11 @@ MonoBehaviour:
       BuildOptions: 0
   - WorkerType: UnityGameLogic
     ScenesForWorker:
-    - {fileID: 102900000, guid: f5fda56aad5d91d408ff123b26ab6ade, type: 3}
+    - {fileID: 102900000, guid: c8328e98bbcdcf1459d3949d07da124f, type: 3}
     LocalBuildConfig:
       BuildPlatforms: 1
       BuildOptions: 0
     CloudBuildConfig:
       BuildPlatforms: 8
-      BuildOptions: 16384
-  - WorkerType: AndroidClient
-    ScenesForWorker:
-    - {fileID: 102900000, guid: 82ccd0fd96a2ba24f88d0c7d01592f2e, type: 3}
-    LocalBuildConfig:
-      BuildPlatforms: 32
-      BuildOptions: 0
-    CloudBuildConfig:
-      BuildPlatforms: 0
-      BuildOptions: 16384
-  - WorkerType: iOSClient
-    ScenesForWorker:
-    - {fileID: 102900000, guid: 424c4b2c090874512badc5e7ee757d5f, type: 3}
-    LocalBuildConfig:
-      BuildPlatforms: 64
-      BuildOptions: 1
-    CloudBuildConfig:
-      BuildPlatforms: 0
       BuildOptions: 16384
   isInitialised: 1

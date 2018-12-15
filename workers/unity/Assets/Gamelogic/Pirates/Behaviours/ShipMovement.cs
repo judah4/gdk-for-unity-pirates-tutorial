@@ -18,6 +18,8 @@ namespace Assets.Gamelogic.Pirates.Behaviours
         [Require] private Rotation.Requirable.Writer RotationWriter;
         [Require] protected ShipControls.Requirable.Reader ShipControlsReader;
 
+        [SerializeField] private SpatialOSComponent _spatialOsComponent;
+
         private float targetSpeed; // [0..1]
         private float currentSpeed; // [0..1]
         private float targetSteering; // [-1..1]
@@ -30,8 +32,9 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         private void OnEnable()
         {
+            _spatialOsComponent = GetComponent<SpatialOSComponent>();
             // Initialize entity's gameobject transform from Position and Rotation component values
-            transform.position = PositionWriter.Data.Coords.ToUnityVector();
+            transform.position = PositionWriter.Data.Coords.ToUnityVector() + _spatialOsComponent.Worker.Origin;
             transform.rotation = Quaternion.Euler(0.0f, RotationWriter.Data.Rotation, 0.0f);
             myRigidbody.inertiaTensorRotation = Quaternion.identity;
         }
@@ -95,7 +98,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         private void SendPositionAndRotationUpdates()
         {
-            PositionWriter.Send(new Position.Update() {Coords = (transform.position.ToCoordinates()) });
+            PositionWriter.Send(new Position.Update() {Coords = (transform.position - _spatialOsComponent.Worker.Origin).ToCoordinates() });
             RotationWriter.Send(new Rotation.Update() { Rotation = ((uint)transform.rotation.eulerAngles.y)});
         }
     }

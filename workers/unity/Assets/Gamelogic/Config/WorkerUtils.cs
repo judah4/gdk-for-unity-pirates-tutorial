@@ -19,8 +19,8 @@ namespace Playground
             {
                 UnityGameLogic,
                 UnityClient,
-                AndroidClient,
-                iOSClient
+                //AndroidClient,
+                //iOSClient
             };
 
         public static void AddClientSystems(World world)

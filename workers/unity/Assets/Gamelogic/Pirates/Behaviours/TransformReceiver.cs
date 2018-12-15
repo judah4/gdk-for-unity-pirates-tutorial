@@ -13,10 +13,14 @@ namespace Assets.Gamelogic.Pirates.Behaviours
         [Require] private Position.Requirable.Reader PositionReader;
         [Require] private Rotation.Requirable.Reader RotationReader;
 
+        [SerializeField] private SpatialOSComponent _spatialOsComponent;
+
         void OnEnable()
         {
+            _spatialOsComponent = GetComponent<SpatialOSComponent>();
+
             // Initialize entity's gameobject transform from Position and Rotation component values
-            transform.position = PositionReader.Data.Coords.ToUnityVector();
+            transform.position = PositionReader.Data.Coords.ToUnityVector() + _spatialOsComponent.Worker.Origin;
             transform.rotation = Quaternion.Euler(0.0f, RotationReader.Data.Rotation, 0.0f);
 
             // Register callback for when component changes
@@ -41,7 +45,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
             {
                 if (update.Coords.HasValue)
                 {
-                    transform.position = update.Coords.Value.ToUnityVector();
+                    transform.position = update.Coords.Value.ToUnityVector() + _spatialOsComponent.Worker.Origin;
                 }
             }
         }
