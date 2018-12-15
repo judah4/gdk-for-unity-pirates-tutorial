@@ -31,7 +31,6 @@ GameObject:
   - component: {fileID: 82232867711984960}
   - component: {fileID: 82910947041501022}
   - component: {fileID: 11410120}
-  - component: {fileID: 114000014020662416}
   - component: {fileID: 11432558}
   - component: {fileID: 11437332}
   - component: {fileID: 11492204}
@@ -40,6 +39,7 @@ GameObject:
   - component: {fileID: 11426928}
   - component: {fileID: 114212193579419444}
   - component: {fileID: 114044228279781424}
+  - component: {fileID: 114346945691078720}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -608,18 +608,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bd65058a0d21174fbeda699c27c4733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114000014020662416
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 107220}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6fafd46819d7b64eb2eec65e1cb4b79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spatialOsComponent: {fileID: 0}
 --- !u!114 &114044228279781424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -642,6 +630,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88985382aaed9d249beab4630a542940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114346945691078720
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 107220}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b318427d91248bb4a88ae1a14bc3c875, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spatialOsComponent: {fileID: 0}
 --- !u!136 &136369682879696712
 CapsuleCollider:
   m_ObjectHideFlags: 1

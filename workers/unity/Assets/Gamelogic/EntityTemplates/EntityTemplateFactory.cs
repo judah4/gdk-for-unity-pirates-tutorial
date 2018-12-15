@@ -1,19 +1,14 @@
 ﻿using Assets.Gamelogic.Core;
 using Improbable.Core;
-using Improbable.Player;
 using Improbable.Ship;
 using Random = UnityEngine.Random; // Used in lesson 2
-using System;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.Gdk.TransformSynchronization;
 using Improbable.PlayerLifecycle;
 using Playground;
 // Used in lesson 2
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.WSA;
 
 namespace Assets.Gamelogic.EntityTemplates
 {

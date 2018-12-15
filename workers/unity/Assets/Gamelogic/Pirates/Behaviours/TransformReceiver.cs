@@ -10,8 +10,8 @@ namespace Assets.Gamelogic.Pirates.Behaviours
     public class TransformReceiver : MonoBehaviour
     {
         // Inject access to the entity's Position and Rotation components
-        [Require] private Position.Requirable.Reader PositionReader;
-        [Require] private Rotation.Requirable.Reader RotationReader;
+        [Require] protected Position.Requirable.Reader PositionReader;
+        [Require] protected Rotation.Requirable.Reader RotationReader;
 
         [SerializeField] private SpatialOSComponent _spatialOsComponent;
 
@@ -26,10 +26,18 @@ namespace Assets.Gamelogic.Pirates.Behaviours
             // Register callback for when component changes
             PositionReader.ComponentUpdated+=(OnPositionUpdated);
             RotationReader.ComponentUpdated += (OnRotationUpdated);
+
+            OnRun();
+
         }
 
         void OnDisable()
         {
+        }
+
+        protected virtual void OnRun()
+        {
+
         }
 
         // Callback for whenever one or more property of the Position standard library component is updated
