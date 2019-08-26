@@ -1,4 +1,3 @@
-using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.GameObjectCreation;
 using System.Collections.Generic;
 using Improbable.Gdk.PlayerLifecycle;
@@ -14,8 +13,8 @@ namespace Playground
         public const string AndroidClient = "AndroidClient";
         public const string iOSClient = "iOSClient";
 
-        public static readonly List<string> AllWorkerAttributes =
-            new List<string>
+        public static readonly string[] AllWorkerAttributes =
+            new string[]
             {
                 UnityGameLogic,
                 UnityClient,
@@ -28,7 +27,6 @@ namespace Playground
             AddLifecycleSystems(world);
             TransformSynchronizationHelper.AddClientSystems(world);
             PlayerLifecycleHelper.AddClientSystems(world);
-            GameObjectRepresentationHelper.AddSystems(world);
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world);
         }
 
@@ -37,13 +35,12 @@ namespace Playground
             AddLifecycleSystems(world);
             TransformSynchronizationHelper.AddServerSystems(world);
             PlayerLifecycleHelper.AddServerSystems(world);
-            GameObjectRepresentationHelper.AddSystems(world);
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world);
         }
 
         private static void AddLifecycleSystems(World world)
         {
-            world.GetOrCreateManager<DisconnectSystem>();
+            world.GetOrCreateSystem<DisconnectSystem>();
         }
     }
 }

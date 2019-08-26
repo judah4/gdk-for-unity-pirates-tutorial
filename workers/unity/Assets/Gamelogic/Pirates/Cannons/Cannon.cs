@@ -24,13 +24,13 @@ namespace Assets.Gamelogic.Pirates.Cannons
         private AudioSource cannonFireAudioSource;
 
         [SerializeField]
-        private SpatialOSComponent _spatialOsComponent;
+        private LinkedEntityComponent _spatialOsComponent;
 
         void Start()
         {
             maxRange = CalculateMaxRange();
             firerColliders = gameObject.GetComponentsInChildren<Collider>();
-            _spatialOsComponent = GetComponent<SpatialOSComponent>();
+            _spatialOsComponent = GetComponent<LinkedEntityComponent>();
 
         }
 
@@ -38,7 +38,7 @@ namespace Assets.Gamelogic.Pirates.Cannons
         {
             if (_spatialOsComponent == null)
             {
-                _spatialOsComponent = GetComponent<SpatialOSComponent>();
+                _spatialOsComponent = GetComponent<LinkedEntityComponent>();
             }
         }
 

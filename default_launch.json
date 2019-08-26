@@ -34,8 +34,10 @@
         "auto_hex_grid": {
 	
           "num_workers": 2
-        
-        }
+        },
+		"options": {
+			"manual_worker_connection_only": true
+		}
       }
     },
     {

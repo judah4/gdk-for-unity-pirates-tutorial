@@ -1,6 +1,6 @@
 using Assets.Gamelogic.Core;
 using Assets.Gamelogic.Pirates.Cannons;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Ship;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,7 +16,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
          * the GameObject of other players' ships.
          */
         [Require]
-        private ShipControls.Requirable.Writer ShipControlsWriter;
+        private ShipControlsWriter ShipControlsWriter;
 
         private CannonFirer cannonFirer;
 
@@ -27,7 +27,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         void Update()
         {
-            ShipControlsWriter.Send(new ShipControls.Update() { 
+            ShipControlsWriter.SendUpdate(new ShipControls.Update() { 
                 TargetSpeed = (Mathf.Clamp01(Input.GetAxis("Vertical"))),
                 TargetSteering = (Input.GetAxis("Horizontal"))
                 });

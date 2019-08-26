@@ -1,9 +1,11 @@
 using System;
 using Improbable;
 using Improbable.Core;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Ship;
+using Unity.Transforms;
 using UnityEngine;
+using Position = Improbable.Position;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
 {
@@ -14,11 +16,10 @@ namespace Assets.Gamelogic.Pirates.Behaviours
          * An entity with this MonoBehaviour will have it enabled only for the single worker (whether client or server)
          * which has write-access for its Position and Rotation components.
          */
-        [Require] private Position.Requirable.Writer PositionWriter;
-        [Require] private Rotation.Requirable.Writer RotationWriter;
-        [Require] protected ShipControls.Requirable.Reader ShipControlsReader;
+        [Require] private PositionWriter PositionWriter;
+        [Require] protected ShipControlsReader ShipControlsReader;
 
-        [SerializeField] private SpatialOSComponent _spatialOsComponent;
+        [SerializeField] private LinkedEntityComponent _spatialOsComponent;
 
         private float targetSpeed; // [0..1]
         private float currentSpeed; // [0..1]
@@ -32,10 +33,9 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         private void OnEnable()
         {
-            _spatialOsComponent = GetComponent<SpatialOSComponent>();
+            _spatialOsComponent = GetComponent<LinkedEntityComponent>();
             // Initialize entity's gameobject transform from Position and Rotation component values
             transform.position = PositionWriter.Data.Coords.ToUnityVector() + _spatialOsComponent.Worker.Origin;
-            transform.rotation = Quaternion.Euler(0.0f, RotationWriter.Data.Rotation, 0.0f);
             myRigidbody.inertiaTensorRotation = Quaternion.identity;
         }
 
@@ -98,8 +98,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         private void SendPositionAndRotationUpdates()
         {
-            PositionWriter.Send(new Position.Update() {Coords = (transform.position - _spatialOsComponent.Worker.Origin).ToCoordinates() });
-            RotationWriter.Send(new Rotation.Update() { Rotation = ((uint)transform.rotation.eulerAngles.y)});
+            PositionWriter.SendUpdate(new Position.Update() {Coords = (transform.position - _spatialOsComponent.Worker.Origin).ToCoordinates() });
         }
     }
 

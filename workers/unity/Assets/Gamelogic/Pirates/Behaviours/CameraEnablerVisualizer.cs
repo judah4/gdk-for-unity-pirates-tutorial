@@ -1,5 +1,5 @@
 using Improbable.Core;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Behaviours
@@ -13,7 +13,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
          * the GameObject of other players' ships.
          */
         [Require]
-        private ClientAuthorityCheck.Requirable.Writer ClientAuthorityCheckWriter;
+        private ClientAuthorityCheckWriter ClientAuthorityCheckWriter;
 
         private Transform Camera;
         [SerializeField]

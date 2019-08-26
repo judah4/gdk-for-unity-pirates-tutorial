@@ -13,11 +13,11 @@ namespace Assets.Gamelogic.Pirates.Behaviours
         [Require] protected Position.Requirable.Reader PositionReader;
         [Require] protected Rotation.Requirable.Reader RotationReader;
 
-        [SerializeField] private SpatialOSComponent _spatialOsComponent;
+        [SerializeField] private LinkedEntityComponent _spatialOsComponent;
 
         void OnEnable()
         {
-            _spatialOsComponent = GetComponent<SpatialOSComponent>();
+            _spatialOsComponent = GetComponent<LinkedEntityComponent>();
 
             // Initialize entity's gameobject transform from Position and Rotation component values
             transform.position = PositionReader.Data.Coords.ToUnityVector() + _spatialOsComponent.Worker.Origin;
