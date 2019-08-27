@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -16,18 +17,68 @@ MonoBehaviour:
     ScenesForWorker:
     - {fileID: 102900000, guid: e149a29d6c8e76449b120513654cc452, type: 3}
     LocalBuildConfig:
-      BuildPlatforms: 1
-      BuildOptions: 1
+      BuildTargets:
+      - Options: 0
+        Enabled: 1
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
     CloudBuildConfig:
-      BuildPlatforms: 20
-      BuildOptions: 0
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 1
+        Required: 0
+      - Options: 16384
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
   - WorkerType: UnityGameLogic
     ScenesForWorker:
     - {fileID: 102900000, guid: c8328e98bbcdcf1459d3949d07da124f, type: 3}
     LocalBuildConfig:
-      BuildPlatforms: 1
-      BuildOptions: 0
+      BuildTargets:
+      - Options: 0
+        Enabled: 1
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
     CloudBuildConfig:
-      BuildPlatforms: 8
-      BuildOptions: 16384
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 16384
+        Enabled: 1
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
+      - Options: 0
+        Enabled: 0
+        Required: 0
   isInitialised: 1

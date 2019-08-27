@@ -413,8 +413,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spatialOsComponent: {fileID: 0}
   myRigidbody: {fileID: 5458276}
-  MovementSpeed: 50
-  TurningSpeed: 100
+  MovementSpeed: 120
+  TurningSpeed: 200
   boatMovementAudio: {fileID: 82232867711984960}
 --- !u!114 &11441326
 MonoBehaviour:
@@ -501,8 +501,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7e00873dd53438245919187ebd00e937, type: 2}
   - {fileID: 11400000, guid: 3d4e3c9d4646410429b49892bdf0b52c, type: 2}
   SendStrategies:
-  - {fileID: 11400000, guid: f312e7c0a0c68bd459f6b523a151cbb6, type: 2}
-  SetKinematicWhenNotAuthoritative: 1
+  - {fileID: 11400000, guid: c214826e4a2dee44d961e287ec697350, type: 2}
+  SetKinematicWhenNotAuthoritative: 0
 --- !u!1 &113582
 GameObject:
   m_ObjectHideFlags: 0

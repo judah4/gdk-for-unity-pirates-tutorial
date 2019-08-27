@@ -98,7 +98,7 @@ namespace Assets.Gamelogic.Pirates.Behaviours
 
         private void SendPositionAndRotationUpdates()
         {
-            PositionWriter.SendUpdate(new Position.Update() {Coords = (transform.position - _spatialOsComponent.Worker.Origin).ToCoordinates() });
+            //PositionWriter.SendUpdate(new Position.Update() {Coords = (transform.position - _spatialOsComponent.Worker.Origin).ToCoordinates() });
         }
     }
 
