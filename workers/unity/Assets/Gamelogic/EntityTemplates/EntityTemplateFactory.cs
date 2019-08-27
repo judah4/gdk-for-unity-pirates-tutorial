@@ -17,13 +17,14 @@ namespace Assets.Gamelogic.EntityTemplates
     {
 
         // Defines the template for the PlayerShip entity.
-        public static EntityTemplate CreatePlayerShipTemplate(string workerId, Vector3 position)
+        public static EntityTemplate CreatePlayerShipTemplate(string clientWorkerId,
+            byte[] serializedArguments)
         {
-            var clientAttribute = EntityTemplate.GetWorkerAccessAttribute(workerId);// CommonRequirementSets.SpecificClientOnly(_clientWorkerId);
+            var clientAttribute = EntityTemplate.GetWorkerAccessAttribute(clientWorkerId);// CommonRequirementSets.SpecificClientOnly(_clientWorkerId);
 
 
             //set position to random for now
-            position = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+            var position = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
 
 
             var template = new EntityTemplate();
@@ -33,8 +34,8 @@ namespace Assets.Gamelogic.EntityTemplates
             template.AddComponent(new ShipControls.Snapshot(), clientAttribute);
             template.AddComponent(new ClientAuthorityCheck.Snapshot(), clientAttribute);
 
-            PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
-            TransformSynchronizationHelper.AddTransformSynchronizationComponents(template, WorkerUtils.UnityGameLogic, location: coords.ToUnityVector(), rotation: _rotation);
+            PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, clientWorkerId, WorkerUtils.UnityGameLogic);
+            TransformSynchronizationHelper.AddTransformSynchronizationComponents(template, WorkerUtils.UnityGameLogic, location: position);
 
 
             template.SetReadAccess(WorkerUtils.AllWorkerAttributes);

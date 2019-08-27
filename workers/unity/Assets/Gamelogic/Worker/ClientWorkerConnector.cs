@@ -1,24 +1,51 @@
+using System;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Playground
 {
-    public class ClientWorkerConnector : DefaultWorkerConnector
+    public class ClientWorkerConnector : WorkerConnector
     {
+#pragma warning disable 649
+        [SerializeField] private bool UseExternalIp;
         [SerializeField] private GameObject level;
+#pragma warning restore 649
 
         private GameObject levelInstance;
 
         private async void Start()
         {
-            await Connect(WorkerUtils.UnityClient, new ForwardingDispatcher()).ConfigureAwait(false);
-        }
+            Application.targetFrameRate = 60;
 
-        protected override string SelectDeploymentName(DeploymentList deployments)
-        {
-            // This could be replaced with a splash screen asking to select a deployment or some other user-defined logic.
-            return deployments.Deployments[0].DeploymentName;
+            var connParams = CreateConnectionParameters(WorkerUtils.UnityClient);
+            connParams.Network.UseExternalIp = UseExternalIp;
+            connParams.Network.ConnectionType = NetworkConnectionType.RakNet;
+
+            var builder = new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionParameters(connParams);
+
+            if (!Application.isEditor)
+            {
+                var initializer = new CommandLineConnectionFlowInitializer();
+                switch (initializer.GetConnectionService())
+                {
+                    case ConnectionService.Receptionist:
+                        builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient), initializer));
+                        break;
+                    case ConnectionService.Locator:
+                        builder.SetConnectionFlow(new LocatorFlow(initializer));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient)));
+            }
+
+            await Connect(builder, new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
         protected override void HandleWorkerConnectionEstablished()

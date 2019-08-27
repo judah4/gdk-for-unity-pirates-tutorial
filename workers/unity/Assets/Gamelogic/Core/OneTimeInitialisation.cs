@@ -1,8 +1,8 @@
+using Assets.Gamelogic.EntityTemplates;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.PlayerLifecycle;
 using Unity.Entities;
 using UnityEngine;
-using Assets.Gamelogic.EntityTemplates;
 
 namespace Playground
 {
@@ -19,7 +19,6 @@ namespace Playground
             }
 
             initialized = true;
-            WorldsInitializationHelper.SetupInjectionHooks();
             PlayerLoopManager.RegisterDomainUnload(WorldsInitializationHelper.DomainUnloadShutdown, 1000);
 
             // Setup template to use for player on connecting client

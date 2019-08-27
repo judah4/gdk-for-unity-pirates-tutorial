@@ -1,4 +1,4 @@
-﻿using Improbable.Gdk.GameObjectRepresentation;
+﻿using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Assets.Gamelogic.Pirates.Cannons
@@ -49,7 +49,7 @@ namespace Assets.Gamelogic.Pirates.Cannons
             if (CannonballPrefab != null)
             {
                 var cannonball = Instantiate(CannonballPrefab, transform.position+dir*0.6f, transform.rotation) as GameObject;
-                var entityId = _spatialOsComponent.SpatialEntityId;
+                var entityId = _spatialOsComponent.EntityId;
                 cannonball.GetComponent<DestroyCannonball>().firerEntityId = entityId;
                 EnsureCannonBallWillNotCollideWithFirer(cannonball);
                 FireCannonball(cannonball, dir, firingPitch);
