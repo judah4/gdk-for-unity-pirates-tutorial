@@ -118,5 +118,21 @@ namespace Assets.Gamelogic.EntityTemplates
             return template;
 
         }
+
+        public static EntityTemplate CreatePirateEntityTemplate(Vector3 initialPosition, Quaternion initialRotation)
+        {
+            var template = new EntityTemplate();
+            template.AddComponent(new Position.Snapshot() { Coords = initialPosition.ToCoordinates() }, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Metadata.Snapshot() { EntityType = SimulationSettings.PirateShipPrefabName }, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
+            template.AddComponent(new ShipControls.Snapshot(), WorkerUtils.UnityGameLogic);
+
+            TransformSynchronizationHelper.AddTransformSynchronizationComponents(template, WorkerUtils.UnityGameLogic, location: initialPosition, rotation: initialRotation);
+
+            template.SetReadAccess(WorkerUtils.AllWorkerAttributes);
+            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
+
+            return template;
+        }
     }
 }
