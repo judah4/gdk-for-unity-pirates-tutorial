@@ -83,21 +83,21 @@ pirate ship:
 1. In `EntityTemplateFactory.cs`, add a new method to create a Pirate Entity at a given position:
 
     ```csharp
-    public static Entity CreatePirateEntityTemplate(Vector3 initialPosition, uint initialRotation)
+    public static EntityTemplate CreatePirateEntityTemplate(Vector3 initialPosition, Quaternion initialRotation)
     {
     }
     ```
 
-2. You create an entity using the builder pattern. Add the following lines to initialise an `EntityBuilder` with a
+2. You create an entity using the builder pattern. Add the following lines to initialise an `EntityTemplate` with a
 Position component, which every entity needs:
 
     ```csharp
-        var pirateEntityTemplate = EntityBuilder.Begin()
-            .AddPositionComponent(initialPosition, CommonRequirementSets.PhysicsOnly)
+        var template = new EntityTemplate();
+            template.AddComponent(new Position.Snapshot() { Coords = initialPosition.ToCoordinates() }, WorkerUtils.UnityGameLogic);
     ```
 
     The second argument also adds an entry to the ACL, making the Position component available only to workers with the
-    'physics' attribute - ie UnityWorkers.
+    'UnityGameLogic' attribute - ie UnityWorkers.
 
 3. The pirate ships also need a [Unity prefab](https://docs.unity3d.com/Manual/Prefabs.html) associated with them, so
    that Unity can spawn a GameObject for them. That prefab is already in the project, and its name is in the
@@ -108,7 +108,7 @@ Position component, which every entity needs:
     ```csharp
         ...
         // Set name of Unity prefab associated with this entity
-        .AddMetadataComponent(SimulationSettings.PirateShipPrefabName)
+        template.AddComponent(new Metadata.Snapshot() { EntityType = SimulationSettings.PirateShipPrefabName }, WorkerUtils.UnityGameLogic);
     ```
 
 4. We want NPC ships to be persistent, that is, to be included in snapshots (we'll talk about snapshots in the next
@@ -116,7 +116,7 @@ Position component, which every entity needs:
 
     ```csharp
         ...
-        .SetPersistence(true)
+        template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
     ```
 
 5. When you create an entity template, as mentioned above, you create an ACL to determine which workers can read and
@@ -125,48 +125,46 @@ Position component, which every entity needs:
     ```csharp
         ...
         // Grant any worker read access to this entity.
-        .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+        template.SetReadAccess(WorkerUtils.AllWorkerAttributes);
     ```
 
 6. As discussed in [step 1.1. above](#1-1-look-at-the-playership-template), the pirate ship entity needs two components,
-and they both already exist: `Rotation` and `ShipControls`.
+and they both already exist: `TransformSynchronization` and `ShipControls`.
 
     Add the components to the template in the same way as in `CreatePlayerShipTemplate()` method:
 
     ```csharp
         ...
         // Add components to the entity
-        .AddComponent(new Rotation.Data(initialRotation), CommonRequirementSets.PhysicsOnly)
-        .AddComponent(new ShipControls.Data(0, 0), CommonRequirementSets.PhysicsOnly)
+        template.AddComponent(new ShipControls.Snapshot(), WorkerUtils.UnityGameLogic);
+        TransformSynchronizationHelper.AddTransformSynchronizationComponents(template, WorkerUtils.UnityGameLogic, location: initialPosition, rotation: initialRotation);
     ```
 
-    Both of these components should be controlled by a `UnityWorker`, hence `CommonRequirementSets.PhysicsOnly`.
+    Both of these components should be controlled by a `UnityWorker`, hence `WorkerUtils.UnityGameLogic`.
 
-7. Finally, the method needs to build the entity and return it to the caller:
+7. Finally, the method needs to return the entity template to the caller:
 
     ```csharp
         ...
-        .Build();
 
-    return pirateEntityTemplate;
+    return template;
     ```
 
 The finished method should look like this:
 
 ```csharp
-public static Entity CreatePirateEntityTemplate(Vector3 initialPosition, uint initialRotation)
-{
-    var pirateEntityTemplate = EntityBuilder.Begin()
-        .AddPositionComponent(initialPosition, CommonRequirementSets.PhysicsOnly)
-        .AddMetadataComponent(SimulationSettings.PirateShipPrefabName)
-        .SetPersistence(true)
-        .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-        .AddComponent(new Rotation.Data(initialRotation), CommonRequirementSets.PhysicsOnly)
-        .AddComponent(new ShipControls.Data(0, 0), CommonRequirementSets.PhysicsOnly)
-        .Build();
-
-    return pirateEntityTemplate;
-}
+public static EntityTemplate CreatePirateEntityTemplate(Vector3 initialPosition, Quaternion initialRotation)
+	{
+		var template = new EntityTemplate();
+		template.AddComponent(new Position.Snapshot() { Coords = initialPosition.ToCoordinates() }, WorkerUtils.UnityGameLogic);
+		template.AddComponent(new Metadata.Snapshot() { EntityType = SimulationSettings.PirateShipPrefabName }, WorkerUtils.UnityGameLogic);
+		template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
+		template.AddComponent(new ShipControls.Snapshot(), WorkerUtils.UnityGameLogic);
+		TransformSynchronizationHelper.AddTransformSynchronizationComponents(template, WorkerUtils.UnityGameLogic, location: initialPosition, rotation: initialRotation);
+		template.SetReadAccess(WorkerUtils.AllWorkerAttributes);
+		template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
+		return template;
+	}
 ```
 
 ### 1.3. What's a snapshot?
