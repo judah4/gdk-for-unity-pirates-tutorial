@@ -12,7 +12,7 @@ namespace Assets.Editor
 {
     public class SnapshotMenu : MonoBehaviour
     {
-        [MenuItem("Improbable/Snapshots/Generate Default Snapshot")]
+        [MenuItem("SpatialOS/Snapshots/Generate Default Snapshot")]
         private static void GenerateDefaultSnapshot()
         {
             var snapshotEntities = new Dictionary<EntityId, EntityTemplate>();

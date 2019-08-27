@@ -1,7 +1,7 @@
 {
-  "template": "small",
+  "template": "w2_r0500_e5",
   "world": {
-    "chunkEdgeLengthMeters": 50,
+    "chunkEdgeLengthMeters": 5,
     "snapshots": {
       "snapshotWritePeriodSeconds": 0
     },
@@ -16,80 +16,65 @@
       }
     ]
   },
+  "load_balancing": {
+    "layer_configurations": [
+      {
+        "layer": "UnityGameLogic",
+        "points_of_interest": {
+          "num_workers": 1,
+          "points": [
+            {
+              "x": 0,
+              "z": 0
+            }
+          ]
+        },
+        "options": {
+          "manual_worker_connection_only": true
+        }
+      }
+    ]
+  },
   "workers": [
     {
       "worker_type": "UnityGameLogic",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        }
-      ],
       "permissions": [
         {
           "all": {}
         }
       ],
-      "load_balancing": {
-        "auto_hex_grid": {
-	
-          "num_workers": 2
-        },
-		"options": {
-			"manual_worker_connection_only": true
-		}
-      }
+      "flags": [
+        {
+          "name": "my_flag",
+          "value": "has_a_value"
+        }
+      ]
     },
     {
       "worker_type": "UnityClient",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        }
-      ],
       "permissions": [
         {
-          "all": {}
+          "entity_query": {
+            "allow": true,
+            "components": [
+              "*"
+            ]
+          }
         }
-      ],
-      "load_balancing": {
-        "singleton_worker": {}
-      }
+      ]
     },
     {
-      "worker_type": "SimulatedPlayer",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        }
-      ],
+      "worker_type": "MobileClient",
       "permissions": [
         {
-          "all": {}
+          "entity_query": {
+            "allow": true,
+            "components": [
+              "*"
+            ]
+          }
         }
-      ],
-      "load_balancing": {
-        "singleton_worker": {}
-      }
-    },
-    {
-      "worker_type": "SimulatedPlayerCoordinator",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        }
-      ],
-      "permissions": [
-        {
-          "all": {}
-        }
-      ],
-      "load_balancing": {
-        "singleton_worker": {}
-      }
+      ]
     }
   ]
 }
