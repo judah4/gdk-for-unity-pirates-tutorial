@@ -26,11 +26,9 @@ namespace Assets.Gamelogic.EntityTemplates
             //set position to random for now
             var position = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
 
-
             var template = new EntityTemplate();
             template.AddComponent(new Position.Snapshot() { Coords = position.ToCoordinates() }, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Metadata.Snapshot() { EntityType = SimulationSettings.PlayerShipPrefabName }, WorkerUtils.UnityGameLogic);
-            //template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
             template.AddComponent(new ShipControls.Snapshot(), clientAttribute);
             template.AddComponent(new ClientAuthorityCheck.Snapshot(), clientAttribute);
 

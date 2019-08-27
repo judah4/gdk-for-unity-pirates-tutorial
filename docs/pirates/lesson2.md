@@ -33,27 +33,30 @@ In the Unity Editor's project panel, navigate to `Assets/Gamelogic/EntityTemplat
 One of the methods here, `CreatePlayerShipTemplate()`, defines the template for the player's ship:
 
 ```csharp
-public static Entity CreatePlayerShipTemplate(string clientWorkerId, Vector3 initialPosition)
-{
-    var playerEntityTemplate = EntityBuilder.Begin()
-      // Add components to the entity, then set the access permissions for the component on the entity relative to the client or server worker ids.
-      .AddPositionComponent(initialPosition, CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-      .AddMetadataComponent(SimulationSettings.PlayerShipPrefabName)
-      .SetPersistence(false)
-      .SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-      .AddComponent(new Rotation.Data(0), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-      .AddComponent(new ClientConnection.Data(SimulationSettings.TotalHeartbeatsBeforeTimeout), CommonRequirementSets.PhysicsOnly)
-      .AddComponent(new ShipControls.Data(0, 0), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-      .AddComponent(new ClientAuthorityCheck.Data(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-      .Build();
+public static EntityTemplate CreatePlayerShipTemplate(string clientWorkerId, byte[] serializedArguments)
+	{
+		var clientAttribute = EntityTemplate.GetWorkerAccessAttribute(clientWorkerId);
 
-    return playerEntityTemplate;
-}
+		//set position to random for now
+		var position = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+
+		var template = new EntityTemplate();
+		template.AddComponent(new Position.Snapshot() { Coords = position.ToCoordinates() }, WorkerUtils.UnityGameLogic);
+		template.AddComponent(new Metadata.Snapshot() { EntityType = SimulationSettings.PlayerShipPrefabName }, WorkerUtils.UnityGameLogic);
+		template.AddComponent(new ShipControls.Snapshot(), clientAttribute);
+		template.AddComponent(new ClientAuthorityCheck.Snapshot(), clientAttribute);
+		PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, clientWorkerId, WorkerUtils.UnityGameLogic);
+		TransformSynchronizationHelper.AddTransformSynchronizationComponents(template, WorkerUtils.UnityGameLogic, location: position);
+		template.SetReadAccess(WorkerUtils.AllWorkerAttributes);
+		template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
+
+		return template;
+	}
 ```
 
 #### What's going on here?
 
-Take a look at the lines that begin with `.Add`. These lines add components to the specified entity template for the
+Take a look at the lines that begin with `template.AddComponent`. These lines add components to the specified entity template for the
 player's ship:
 
 * [**Position** (SpatialOS documentation)](https://docs.improbable.io/reference/13.0/shared/glossary#position): defines the position of an entity in the
@@ -61,8 +64,6 @@ player's ship:
   **Position** is a required component for all entities.
 * [**Metadata** (SpatialOS documentation)](https://docs.improbable.io/reference/13.0/shared/glossary#metadata): defines the entity type of an entity which
   is used internally by the SpatialOS SDK for Unity to map entities to Unity prefabs.
-* **ClientConnection**: used to maintain a connection with clients. This is only needed by entities associated with a
-  player client, so you don't need this component for the pirate ships.
 * **ShipControls**: used to steer the ship. You can re-use this one, as a pirate ship will need to move around too.
 * **ClientAuthorityCheck**: another component only needed by entities associated with a player client. You don't need
   this component for the pirate ships either.
@@ -70,11 +71,9 @@ player's ship:
 Every entity also has an [**ACL** (SpatialOS documentation)](https://docs.improbable.io/reference/13.0/shared/glossary#acl) (access control list)
 component, which determines which workers can read from and write to its components. You'll learn about and edit
 **ACLs** in later lessons. For now, it's enough to know that
-`CommonRequirementSets.SpecificClientOnly(clientWorkerId)` makes sure that only the player client has write access to
+`EntityTemplate.GetWorkerAccessAttribute(clientWorkerId)` makes sure that only the player client has write access to
 the player ship components.
 
-We set the [**Persistence** (SpatialOS documentation)](https://docs.improbable.io/reference/13.0/shared/glossary#persistence) component of this entity to
-`false`, because we want it to have the same lifecycle as the player that controls it.
 
 ### 1.2. Create a Pirate entity template
 
